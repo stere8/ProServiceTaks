@@ -11,6 +11,23 @@ import { PaginatedResponse } from '../../models/paginated-response';
   styleUrls: ['./task-assignment.component.css']
 })
 export class TaskAssignmentComponent implements OnInit {
+
+  onAssignTasks(taskIds: number[]): void {
+    if (!this.selectedUser) {
+      return;
+    }
+    
+    this.taskService.assignTasks(this.selectedUser.id, taskIds).subscribe({
+      next: () => {
+        this.onUserSelected(this.selectedUser!);
+      },
+      error: (error) => {
+        console.error('Error assigning tasks:', error);
+        alert('Failed to assign tasks. Please try again later.');
+      }
+    });
+  }
+  
   users: User[] = [];
   selectedUser?: User;
   assignedTasks: Task[] = [];
@@ -23,6 +40,9 @@ export class TaskAssignmentComponent implements OnInit {
     private userService: UserService,
     private taskService: TaskService
   ) {}
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
 
   loadAvailableTasks() {
     if (!this.selectedUser) return;

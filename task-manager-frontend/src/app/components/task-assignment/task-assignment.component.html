@@ -1,12 +1,42 @@
-<!-- In task-assignment.component.html -->
-<app-available-tasks 
-  [tasks]="availableTasks" 
-  (assignTasks)="onAssignTasks($event)"
-  (pageChange)="onPageChange($event)">
-</app-available-tasks>
+<div class="task-assignment-container">
+  <!-- User Selection Section -->
+  <app-user-list 
+    [users]="users" 
+    (userSelected)="onUserSelected($event)">
+  </app-user-list>
 
-<div class="pagination-controls" *ngIf="totalPages > 1">
-  <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
-  <span>Page {{currentPage}} of {{totalPages}}</span>
-  <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+  <!-- Tasks Section -->
+  <div class="tasks-section" *ngIf="selectedUser">
+    <!-- Available Tasks -->
+    <app-available-tasks 
+      [tasks]="availableTasks" 
+      (assignTasks)="onAssignTasks($event)"
+      (pageChange)="onPageChange($event)">
+    </app-available-tasks>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-controls" *ngIf="totalPages > 1">
+      <button 
+        [disabled]="currentPage === 1" 
+        (click)="previousPage()">
+        Previous
+      </button>
+      <span>Page {{currentPage}} of {{totalPages}}</span>
+      <button 
+        [disabled]="currentPage === totalPages" 
+        (click)="nextPage()">
+        Next
+      </button>
+    </div>
+
+    <!-- Assigned Tasks -->
+    <app-assigned-tasks 
+      [tasks]="assignedTasks">
+    </app-assigned-tasks>
+  </div>
+
+  <!-- No User Selected Message -->
+  <div class="no-user-message" *ngIf="!selectedUser">
+    Please select a user to view and assign tasks.
+  </div>
 </div>
