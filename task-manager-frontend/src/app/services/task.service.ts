@@ -49,17 +49,11 @@ export class TaskService {
       .set('pageSize', '10');
   
     return this.http
-<<<<<<< HEAD
-    .get<PaginatedResponse<Task>>(`${this.baseUrl}/unassigned`, { params })
-    .pipe(
-        tap(resp   => console.log('[TaskService] all vailavle tasks tasks:', resp.data)),          // ← before filter
-=======
-      .get<PaginatedResponse<Task>>(`${this.baseUrl}`, { params })
+      .get<PaginatedResponse<Task>>(`${this.baseUrl}/unassigned`, { params })
       .pipe(
-        tap(resp   => console.log('[TaskService] all tasks:', resp.data)),          // ← before filter
->>>>>>> 057456ace38fd0ef60cbcdaf3e57227094bb62ad
-        map(resp   => resp.data.filter(t => t.assignedUserId === null)),
-        tap(tasks  => console.log('[TaskService] unassigned tasks:', tasks))         // ← after filter
+        tap(resp => console.log('[TaskService] all available tasks:', resp.data)),
+        map(resp => resp.data),
+        tap(tasks => console.log('[TaskService] filtered tasks:', tasks))
       );
   }
 

@@ -1,3 +1,12 @@
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Task } from '../../models/task.model';
+
+@Component({
+  selector: 'app-available-tasks',
+  templateUrl: './available-tasks.component.html',
+  styleUrls: ['./available-tasks.component.css']
+})
+
 export class AvailableTasksComponent {
   @Input() tasks: Task[] = [];
   @Output() assignTasks = new EventEmitter<number[]>();
