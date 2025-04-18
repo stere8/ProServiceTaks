@@ -38,6 +38,27 @@
   },
   {
     "ContainingType": "TaskManagerBackend.Controllers.TasksController",
+    "Method": "GetAllUnassignedTasks",
+    "RelativePath": "api/Tasks/unassigned",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManagerBackend.Controllers.TasksController",
     "Method": "GetTasksByUserId",
     "RelativePath": "api/Tasks/user/{id}",
     "HttpMethod": "GET",

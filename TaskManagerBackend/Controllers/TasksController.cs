@@ -48,6 +48,40 @@ namespace TaskManagerBackend.Controllers
             });
         }
 
+        [HttpGet("unassigned")]
+        public async Task<IActionResult> GetAllUnassignedTasks(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 100)
+        {
+            // Validate input
+            page = page < 1 ? 1 : page;
+            pageSize = pageSize switch
+            {
+                >= 100 => 100,
+                < 1 => 10,
+                _ => pageSize
+            };
+
+            var allTasks = await _taskServices.GetAllTasks();
+            var totalCount = allTasks.Count;
+
+            var sortedTasks = allTasks
+                .Where(t => t.AssignedUserId == null)
+                .OrderByDescending(t => t.Difficulty)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return Ok(new PaginatedResponse<TaskBase>
+            {
+                Data = sortedTasks,
+                TotalCount = totalCount,
+                Page = page,
+                PageSize = pageSize,
+                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize)
+            });
+        }
+
         [HttpPost("assign")]
         public IActionResult AssignTasks([FromBody] AssignmentRequest request)
         {

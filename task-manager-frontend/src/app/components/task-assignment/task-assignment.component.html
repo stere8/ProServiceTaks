@@ -13,9 +13,10 @@
         
         <!-- Available Tasks Component -->
         <app-available-tasks 
-            [tasks]="availableTasks" 
-            (assignTasks)="onAssignTasks($event)">
-        </app-available-tasks>
+        [tasks]="availableTasks" 
+        (assignTasks)="onAssignTasks($event)"
+        (pageChange)="onPageChange($event)">
+    </app-available-tasks>
       </div>
     </div>
   </div>

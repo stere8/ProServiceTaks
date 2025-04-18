@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, tap } from 'rxjs/operators';
 import { Task } from '../models/task.model';
 import { PaginatedResponse } from '../models/paginated-response';
 
@@ -23,6 +23,21 @@ export class TaskService {
       .get<Task[]>(`${this.baseUrl}/user/${userId}`);
   }
 
+  getAllTasks(userId: number): Observable<Task[]> {
+    const params = new HttpParams()
+      .set('page', '1')
+      .set('pageSize', '100');
+  
+    return this.http
+      .get<PaginatedResponse<Task>>(`${this.baseUrl}`, { params })
+      .pipe(
+        tap(resp   => console.log('[TaskService] all tasks:', resp.data)),          // ← before filter
+        map(resp   => resp.data.filter(t => t.assignedUserId === null)),
+        tap(tasks  => console.log('[TaskService] unassigned tasks:', tasks))         // ← after filter
+      );
+  }
+
+
   /**
    * Available tasks: since there's no /available endpoint,
    * we fetch all (paginated) then filter out assigned ones.
@@ -31,12 +46,14 @@ export class TaskService {
   getAvailableTasks(userId: number): Observable<Task[]> {
     const params = new HttpParams()
       .set('page', '1')
-      .set('pageSize', '100');    // adjust pageSize if you need fewer
-
+      .set('pageSize', '10');
+  
     return this.http
-      .get<PaginatedResponse<Task>>(`${this.baseUrl}`, { params })
-      .pipe(
-        map(resp => resp.data.filter(t => t.assignedUserId !== userId))
+    .get<PaginatedResponse<Task>>(`${this.baseUrl}/unassigned`, { params })
+    .pipe(
+        tap(resp   => console.log('[TaskService] all vailavle tasks tasks:', resp.data)),          // ← before filter
+        map(resp   => resp.data.filter(t => t.assignedUserId === null)),
+        tap(tasks  => console.log('[TaskService] unassigned tasks:', tasks))         // ← after filter
       );
   }
 

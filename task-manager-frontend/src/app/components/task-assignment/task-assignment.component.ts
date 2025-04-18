@@ -51,7 +51,7 @@ export class TaskAssignmentComponent implements OnInit {
         }
       });
 
-    this.taskService.getAvailableTasks(user.id)
+    this.taskService.getAllTasks(user.id)
       .subscribe({
         next : tasks => {
           console.log('available tasks:', tasks);
@@ -63,6 +63,24 @@ export class TaskAssignmentComponent implements OnInit {
           console.error('getAvailableTasks failed', err);
         }
       });
+  }
+  
+
+  onPageChange(page: number): void {
+    if (this.selectedUser) {
+      this.taskService.getAvailableTasks(this.selectedUser.id)
+        .subscribe({
+          next: tasks => {
+            console.log('available tasks:', tasks);
+            this.availableTasks = tasks
+              .sort((a,b) => b.difficulty - a.difficulty)
+              .slice((page - 1) * 10, page * 10); // Handle pagination in component
+          },
+          error: err => {
+            console.error('getAvailableTasks failed', err);
+          }
+        });
+    }
   }
 
   onAssignTasks(taskIds: number[]): void {
