@@ -13,4 +13,8 @@ export class UserListComponent {
   selectUser(user: User): void {
     this.userSelected.emit(user);
   }
+
+getUserTypeString(userType: number): string {
+  return userType === 0 ? 'DevOpsAdministrator' : 'Programmer';
+}
 }

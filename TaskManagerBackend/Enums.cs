@@ -11,14 +11,14 @@
 
         public enum ImplementationStatus
         {
-            ToBeDone,
-            Completed,
+            ToBeDone = 0,
+            Completed = 1,
         }
 
         public enum UserType
         {
-            DevOpsAdministrator,
-            Programmer,
+            DevOpsAdministrator = 0,
+            Programmer = 1,
         }
     }
 }

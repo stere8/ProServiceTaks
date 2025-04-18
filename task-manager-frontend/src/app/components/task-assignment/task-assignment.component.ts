@@ -1,9 +1,9 @@
-// src/app/components/task-assignment/task-assignment.component.ts
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../models/user.model';
 import { Task } from '../../models/task.model';
 import { UserService } from '../../services/user.service';
 import { TaskService } from '../../services/task.service';
+import { PaginatedResponse } from '../../models/paginated-response';
 
 @Component({
   selector: 'app-task-assignment',
@@ -15,90 +15,51 @@ export class TaskAssignmentComponent implements OnInit {
   selectedUser?: User;
   assignedTasks: Task[] = [];
   availableTasks: Task[] = [];
+  currentPage = 1;
+  pageSize = 10;
+  totalPages = 0;
 
   constructor(
     private userService: UserService,
     private taskService: TaskService
   ) {}
 
-  ngOnInit(): void {
-    this.userService.getUsers()
+  loadAvailableTasks() {
+    if (!this.selectedUser) return;
+    
+    this.taskService.getAvailableTasks(this.selectedUser.id, this.currentPage, this.pageSize)
       .subscribe({
-        next: users => {
-          console.log('fetched users:', users);
-          this.users = users;
+        next: (response: PaginatedResponse<Task>) => {
+          this.availableTasks = response.data;
+          this.totalPages = response.totalPages;
+          this.currentPage = response.page;
         },
-        error: err => {
-          console.error('getUsers failed', err);
+        error: (err: any) => {
+          console.error('Failed to load available tasks', err);
         }
       });
   }
-  
+
   onUserSelected(user: User): void {
     this.selectedUser = user;
-
-    // must pass user.id and subscribe
-    this.taskService.getAssignedTasks(user.id)
-      .subscribe({
-        next : tasks => {
-        console.log('fetched tasks:', tasks);
-        this.assignedTasks = tasks
-          .sort((a,b) => b.difficulty - a.difficulty)
-          .slice(0, 10);
-      },
-        error: err => {
-          console.error('getAssignedTasks failed', err);
-        }
-      });
-
-    this.taskService.getAvailableTasks(user.id)
-      .subscribe({
-        next : tasks => {
-          console.log('available tasks:', tasks);
-          this.availableTasks = tasks
-            .sort((a,b) => b.difficulty - a.difficulty)
-            .slice(0, 10);
-        },
-        error: err => {
-          console.error('getAvailableTasks failed', err);
-        }
-      });
+    this.currentPage = 1; // Reset to first page when user changes
+    this.loadAvailableTasks();
   }
-  
 
-  onPageChange(page: number): void {
-    if (this.selectedUser) {
-      this.taskService.getAvailableTasks(this.selectedUser.id)
-        .subscribe({
-          next: tasks => {
-            console.log('pagr chage', page);
-            console.log('available tasks:', tasks);
-            this.availableTasks = tasks
-              .sort((a,b) => b.difficulty - a.difficulty)
-              .slice((page - 1) * 10, page * 10); // Handle pagination in component
-          },
-          error: err => {
-            console.error('getAvailableTasks failed', err);
-          }
-        });
+  onPageChange(newPage: number) {
+    this.currentPage = newPage;
+    this.loadAvailableTasks();
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.onPageChange(this.currentPage + 1);
     }
   }
 
-  onAssignTasks(taskIds: number[]): void {
-    if (!this.selectedUser) return;
-
-    // subscribe to the POST Observable
-    this.taskService.assignTasks(this.selectedUser.id, taskIds)
-      .subscribe(response => {
-        if (response.isSuccess) {
-          // refresh lists after successful assignment
-          this.onUserSelected(this.selectedUser!);
-        } else {
-          alert('Assignment failed: ' + response.message);
-        }
-      }, err => {
-        console.error('HTTP error', err);
-        alert('Server error during assignment');
-      });
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.onPageChange(this.currentPage - 1);
+    }
   }
 }

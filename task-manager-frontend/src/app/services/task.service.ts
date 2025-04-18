@@ -43,20 +43,17 @@ export class TaskService {
    * we fetch all (paginated) then filter out assigned ones.
    * GET /api/tasks?page=1&pageSize=100 (or whatever max you need)
    */
-  getAvailableTasks(userId: number): Observable<Task[]> {
+  getAvailableTasks(userId: number, page: number = 1, pageSize: number = 10): Observable<PaginatedResponse<Task>> {
     const params = new HttpParams()
-      .set('page', '1')
-      .set('pageSize', '10');
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
   
     return this.http
       .get<PaginatedResponse<Task>>(`${this.baseUrl}/unassigned`, { params })
       .pipe(
-        tap(resp => console.log('[TaskService] all available tasks:', resp.data)),
-        map(resp => resp.data),
-        tap(tasks => console.log('[TaskService] filtered tasks:', tasks))
+        tap(resp => console.log('[TaskService] paginated response:', resp))
       );
   }
-
   /**
    * Assign endpoint is POST /api/tasks/assign
    * It returns 200 + message on success, or 400 + message on failure.

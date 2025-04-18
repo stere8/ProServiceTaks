@@ -2,7 +2,7 @@
     <h3>Select a User</h3>
     <ul>
       <li *ngFor="let user of users" (click)="selectUser(user)">
-        {{ user.nameAndSurname }} – {{ user.userType }}
+        {{ user.nameAndSurname }} – {{ getUserTypeString(user.userType) }}
       </li>
     </ul>
   </div>
