@@ -1,0 +1,5 @@
+.git/
+.gitub/
+TaskManagerBackend/.vs/
+task-manager-frontend/.vscode/
+task-manager-frontend/node_modules/

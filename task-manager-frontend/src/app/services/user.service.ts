@@ -7,7 +7,7 @@ import { User } from '../models/user.model';
   providedIn: 'root'
 })
 export class UserService {
-  private baseUrl = '/api/users';
+  private baseUrl = 'https://localhost:7281/api/users';
 
   constructor(private http: HttpClient) { }
 
@@ -15,6 +15,8 @@ export class UserService {
    * Fetch the full list of users from the backend
    */
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.baseUrl);
+    var response = this.http.get<User[]>(this.baseUrl);
+    console.log('response', response);
+    return response;
   }
 }

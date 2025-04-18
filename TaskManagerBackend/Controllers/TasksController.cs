@@ -18,13 +18,13 @@ namespace TaskManagerBackend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTasks(
         [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10)
+        [FromQuery] int pageSize = 100)
         {
             // Validate input
             page = page < 1 ? 1 : page;
             pageSize = pageSize switch
             {
-                > 100 => 100,
+                >= 100 => 100,
                 < 1 => 10,
                 _ => pageSize
             };

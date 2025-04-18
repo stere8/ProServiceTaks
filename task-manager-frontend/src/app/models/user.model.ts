@@ -1,5 +1,5 @@
 export interface User {
   id: number;
-    name: string;
+    nameAndSurname: string;
     userType: 'Programmer' | 'DevOpsAdministrator';
  }

@@ -22,28 +22,46 @@ export class TaskAssignmentComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // subscribe to the Observable<User[]>
-    this.userService.getUsers().subscribe(users => {
-      this.users = users;
-    });
+    this.userService.getUsers()
+      .subscribe({
+        next: users => {
+          console.log('fetched users:', users);
+          this.users = users;
+        },
+        error: err => {
+          console.error('getUsers failed', err);
+        }
+      });
   }
-
+  
   onUserSelected(user: User): void {
     this.selectedUser = user;
 
     // must pass user.id and subscribe
     this.taskService.getAssignedTasks(user.id)
-      .subscribe(tasks => {
+      .subscribe({
+        next : tasks => {
+        console.log('fetched tasks:', tasks);
         this.assignedTasks = tasks
           .sort((a,b) => b.difficulty - a.difficulty)
           .slice(0, 10);
+      },
+        error: err => {
+          console.error('getAssignedTasks failed', err);
+        }
       });
 
     this.taskService.getAvailableTasks(user.id)
-      .subscribe(tasks => {
-        this.availableTasks = tasks
-          .sort((a,b) => b.difficulty - a.difficulty)
-          .slice(0, 10);
+      .subscribe({
+        next : tasks => {
+          console.log('available tasks:', tasks);
+          this.availableTasks = tasks
+            .sort((a,b) => b.difficulty - a.difficulty)
+            .slice(0, 10);
+        },
+        error: err => {
+          console.error('getAvailableTasks failed', err);
+        }
       });
   }
 
