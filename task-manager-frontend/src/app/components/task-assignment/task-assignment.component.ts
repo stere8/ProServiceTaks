@@ -51,7 +51,7 @@ export class TaskAssignmentComponent implements OnInit {
         }
       });
 
-    this.taskService.getAllTasks(user.id)
+    this.taskService.getAvailableTasks(user.id)
       .subscribe({
         next : tasks => {
           console.log('available tasks:', tasks);
@@ -71,6 +71,7 @@ export class TaskAssignmentComponent implements OnInit {
       this.taskService.getAvailableTasks(this.selectedUser.id)
         .subscribe({
           next: tasks => {
+            console.log('pagr chage', page);
             console.log('available tasks:', tasks);
             this.availableTasks = tasks
               .sort((a,b) => b.difficulty - a.difficulty)
