@@ -14,7 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TaskManagerBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+057456ace38fd0ef60cbcdaf3e57227094bb62ad")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f805414e08529696fd8acc969ad2fdc7bc5834a5")]
+>>>>>>> 057456ace38fd0ef60cbcdaf3e57227094bb62ad
 [assembly: System.Reflection.AssemblyProductAttribute("TaskManagerBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TaskManagerBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
